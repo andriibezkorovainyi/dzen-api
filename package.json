@@ -2,13 +2,13 @@
   "name": "dzen-api",
   "version": "1.0.0",
   "description": "API for the comments app, using TypeScript, Express, PostgreSQL, Prisma ORM and more...",
-  "main": "src/server.js",
+  "main": "src/app.ts",
   "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "start": "npm run build && node dist/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
-    "container": "npm run build && docker build -t dzen-api . && docker run -d --rm -p 3000:3000 dzen-api",
+    "start": "npm run build && node dist/app.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
+    "container": "npm run build && docker build -t dzen-api . && docker run -d --rm -p 5000:5000 dzen-api",
     "format": "prettier --write .",
     "lint": "eslint .",
     "fix-style": "npm run format && npm run lint -- --fix",
@@ -30,11 +30,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.1.1",
     "express": "^4.18.2",
-    "prisma": "^4.15.0"
+    "prisma": "^4.15.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^20.2.5",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "concurrently": "^8.0.1",

@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE env.PORT
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/app.js"]
