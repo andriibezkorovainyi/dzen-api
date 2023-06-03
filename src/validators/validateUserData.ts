@@ -1,12 +1,27 @@
-export function validateUserData(data) {
-  const { userName, email, password } = data;
+import { CreateUserInput } from '../types/userTypes';
 
-  const errors = {};
+export function validateUserData(data: CreateUserInput) {
+  const { userName, email, password, homePage } = data;
+  const errors: {
+    userName?: string;
+    email?: string;
+    password?: string;
+    homePage?: string;
+  } = {};
+
+  if (homePage) {
+    try {
+      new URL(homePage);
+    } catch (err) {
+      errors.homePage = 'Home page is not a valid URL';
+    }
+  }
 
   if (!userName) {
     errors.userName = 'Username is required';
   } else if (!validateUserName(userName)) {
-    errors.userName = 'Username is not valid';
+    errors.userName =
+      'Username must be 1-30 characters long and contain only letters, numbers, underscores and dots';
   }
 
   if (!email) {
@@ -18,29 +33,26 @@ export function validateUserData(data) {
   if (!password) {
     errors.password = 'Password is required';
   } else if (!validatePassword(password)) {
-    errors.password = 'Password is not valid';
+    errors.password =
+      'Password must contain at least 8 characters, one uppercase letter, ' +
+      'one lowercase letter, one number and one special character';
   }
 
   return errors;
 }
 
-export function validateEmail(email) {
+function validateEmail(email: string) {
   const re = /\S+@\S+\.\S+/;
-  return re.test(email) || 'Email is not valid';
+  return re.test(email);
 }
 
-export function validateUserName(userName) {
+function validateUserName(userName: string) {
   const re = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
-  return;
-  re.test(userName);
+  return re.test(userName);
 }
 
-export function validatePassword(password) {
+function validatePassword(password: string) {
   const re =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+~\-=?<>,.;:'"[\]{}|]).{8,}$/;
-  return (
-    re.test(password) ||
-    'Password must contain at least 8 characters, one uppercase letter, ' +
-      'one lowercase letter, one number and one special character'
-  );
+  return re.test(password);
 }
