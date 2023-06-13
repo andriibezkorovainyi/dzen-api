@@ -17,9 +17,18 @@ class UserService {
     });
   }
 
+  async getUserByUserName(userName: string) {
+    return prisma.user.findUnique({
+      where: {
+        userName,
+      },
+    });
+  }
+
   async createUser(data: CreateUserInput) {
-    const { userName, email, password } = data;
-    const avatarUrl = `https://api.multiavatar.com/${email}`;
+    const { userName, email, password, homePage } = data;
+    const safeDate = new Date().toISOString().replace(/:/g, '-');
+    const avatarUrl = `https://api.multiavatar.com/${safeDate + userName}`;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     return prisma.user.create({
@@ -27,6 +36,7 @@ class UserService {
         userName,
         email,
         password: hashedPassword,
+        homePage,
         avatarUrl,
       },
     });
