@@ -1,16 +1,16 @@
-import staticFilesService from '../services/fileService';
+import fileService from '../services/fileService';
 import { Request, Response } from 'express';
 
-class FilesController {
+class FileController {
   async getFile(req: Request, res: Response) {
     console.log('GetStaticFile');
 
     try {
-      const dataUrl = await staticFilesService.getFile(req.params.fileName);
+      const dataUrl = await fileService.getFile(req.params.fileName);
 
       console.log(dataUrl);
 
-      res.status(200).send(dataUrl).setHeader('Content-Type', 'text/plain');
+      res.status(200).send(dataUrl);
     } catch (err) {
       console.log(err);
       res.sendStatus(404);
@@ -18,4 +18,4 @@ class FilesController {
   }
 }
 
-export default new FilesController();
+export default new FileController();
