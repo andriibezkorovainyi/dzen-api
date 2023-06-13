@@ -5,13 +5,14 @@
   "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/app.js",
+    "start": "prisma && npm run build && node dist/app.js",
     "dev": "nodemon --exec ts-node src/app.ts",
     "container": "npm run build && docker build -t dzen-api . && docker run -d --rm -p 5000:5000 dzen-api",
     "format": "prettier --write .",
     "lint": "eslint .",
     "fix-style": "npm run format && npm run lint -- --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma": "prisma generate"
   },
   "repository": {
     "type": "git",
