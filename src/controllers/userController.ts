@@ -1,75 +1,78 @@
-import ws from 'ws';
 import { validateUserData } from '../validators/validateUserData';
 import userService from '../services/userService';
 import userSessionService from '../services/userSessionService';
+import { CreateUserInput } from '../types/userTypes';
+import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { CreateUserInput, GetUserInput } from '../types/userTypes';
 
 class UserController {
-  async getUser(ws: ws, userData: GetUserInput) {
-    const user = await userService.getUserByEmail(userData.email);
+  async getUser(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    const user = await userService.getUserByEmail(email);
 
     if (!user) {
-      ws.send(
-        JSON.stringify({
-          error: 'User with such email is not found, please, sign up',
-        })
-      );
+      res.json({
+        errors: ['User with such email is not found, please, sign up'],
+      });
       return;
     }
 
-    const isPasswordCorrect = await bcrypt.compare(
-      userData.password,
-      user.password
-    );
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      ws.send(JSON.stringify({ error: 'Password is incorrect' }));
+      res.json({
+        errors: ['Password is incorrect'],
+      });
       return;
     }
 
     const { id } = user;
-    const { ip, userAgent } = userData;
+    const ip = req.ip;
+    const userAgent = req.get('User-Agent') || 'no user agent';
+
     await userSessionService.createUserSession(id, ip, userAgent);
 
-    ws.send(JSON.stringify(user));
+    res.json({
+      user,
+    });
   }
 
-  async createUser(ws: ws, userData: CreateUserInput) {
-    const isUserExist = await userService.getUserByEmail(userData.email);
+  async createUser(req: Request, res: Response) {
+    const userData: CreateUserInput = req.body;
 
-    if (isUserExist) {
-      ws.send(
-        JSON.stringify({
-          error: 'User with such email already exists, please, sign in',
-        })
-      );
+    const isUserExist = await Promise.all([
+      await userService.getUserByEmail(userData.email),
+      await userService.getUserByUserName(userData.userName),
+    ]);
+
+    if (isUserExist[0] || isUserExist[1]) {
+      res.json({
+        errors: ['Such user exists, please, log in'],
+      });
       return;
     }
 
     const errors = validateUserData(userData);
-    const errorsCount = Object.keys(errors).length;
 
-    if (errorsCount) {
-      if (errorsCount === 1 && errors.homePage) {
-        ws.send(JSON.stringify({ error: errors.homePage }));
-      } else {
-        ws.send(JSON.stringify(errors));
-        return;
-      }
+    if (errors) {
+      res.json({
+        errors,
+      });
+      return;
     }
 
     try {
       const user = await userService.createUser(userData);
       const { id } = user;
-      const { ip, userAgent } = userData;
+      const ip = req.ip;
+      const userAgent = req.get('User-Agent') || 'no user agent';
+
+      res.json({ user });
 
       await userSessionService.createUserSession(id, ip, userAgent);
-
-      ws.send(JSON.stringify(user));
     } catch (err) {
       console.log(err);
-      ws.send(JSON.stringify({ error: err }));
     }
   }
 }
