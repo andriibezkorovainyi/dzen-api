@@ -1,50 +1,68 @@
 import { WebSocketServer } from 'ws';
-import userController from '../controllers/userController';
 import commentController from '../controllers/commentController';
+import broadcast from './broadcast';
 
-const port = Number(process.env.WS_PORT || 5000);
+const PORT = Number(process.env.WS_PORT || 8080);
 
 const webSocketServer = () => {
-  const wss = new WebSocketServer({ port }, () => {
-    console.log(
-      `WS server is listening at ws://localhost:${process.env.WS_PORT || 5000}`
-    );
+  const wss = new WebSocketServer({ port: PORT }, () => {
+    console.log(`WS server is listening at ws://localhost:${PORT}`);
   });
 
-  wss.on('connection', (ws, req) => {
-    commentController.getComments(ws, {});
-
-    ws.on('message', (message) => {
+  wss.on('connection', (ws) => {
+    console.log('New connection');
+    ws.on('message', async (message) => {
       const { event, data } = JSON.parse(message.toString());
 
-      const userSessionData = {
-        ...data,
-        ip: req.socket.remoteAddress,
-        userAgent: req.headers['user-agent'],
-      };
+      console.log('New Message: ', message.toString());
+
+      if (!event || !data) {
+        ws.send(JSON.stringify({ error: 'Event or data is not provided' }));
+        return;
+      }
+
+      const clientPayload = { ...data };
 
       switch (event) {
-        case 'createUser':
-          userController.createUser(ws, userSessionData);
-          break;
-
-        case 'getUser':
-          userController.getUser(ws, userSessionData);
-          break;
-
         case 'getComments':
-          commentController.getComments(ws, data);
+          console.log('getComments');
+          commentController.getComments(ws, clientPayload);
           break;
 
         case 'createComment':
-          commentController.createComment(ws, data);
+          console.log('createComment');
+          broadcast.comment(clientPayload, wss, ws);
+          break;
+
+        case 'createAnswer':
+          console.log('createAnswer');
+          broadcast.answer(clientPayload, wss, ws);
+          break;
+
+        case 'getAnswers':
+          console.log('getAnswers');
+          commentController.getAnswers(clientPayload, ws);
+          break;
+
+        case 'getCommentsCount':
+          console.log('getCommentsCount');
+          commentController.getCommentsCount(ws);
           break;
 
         default:
-          break;
+          ws.send('Unknown event');
       }
+    });
+
+    ws.on('close', () => {
+      console.log('Connection closed');
+      ws.terminate();
+    });
+
+    ws.on('error', (err) => {
+      console.log('Error: ', err);
+      ws.terminate();
     });
   });
 };
-
 export default webSocketServer;
