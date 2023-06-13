@@ -38,7 +38,7 @@ export function validateUserData(data: CreateUserInput) {
       'one lowercase letter, one number and one special character';
   }
 
-  return errors;
+  return Object.keys(errors).length ? Object.values(errors) : null;
 }
 
 function validateEmail(email: string) {
