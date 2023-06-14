@@ -9,4 +9,6 @@ RUN npm clean-install
 
 COPY . .
 
+RUN npm run build
+
 CMD npm run start
