@@ -2,11 +2,13 @@ import { WebSocketServer } from 'ws';
 import commentController from '../controllers/commentController';
 import broadcast from './broadcast';
 
-const PORT = Number(process.env.$PORT || 8080);
+const WS_PORT = Number(process.env.WS_PORT || 8080);
 
 const webSocketServer = () => {
-  const wss = new WebSocketServer({ port: PORT }, () => {
-    console.log(`WS server is listening at ws://${process.execPath}:${PORT}`);
+  const wss = new WebSocketServer({ port: WS_PORT }, () => {
+    console.log(
+      `WS server is listening at ws://${process.execPath}:${WS_PORT}`
+    );
   });
 
   wss.on('connection', (ws) => {
