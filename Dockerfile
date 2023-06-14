@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
-EXPOSE env.PORT
+EXPOSE 80
 
-CMD ["node", "dist/app.js"]
+EXPOSE 8080
+
+CMD npm run start
