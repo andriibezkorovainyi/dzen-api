@@ -4,8 +4,8 @@
   "description": "API for the comments app, using TypeScript, Express, PostgreSQL, Prisma ORM and more...",
   "main": "src/app.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "prisma generate && npm run build && node dist/app.js",
+    "build": "prisma generate && tsc",
+    "start": "node dist/app.js",
     "dev": "nodemon --exec ts-node src/app.ts",
     "container": "npm run build && docker build -t dzen-api . && docker run -d --rm -p 5000:5000 dzen-api",
     "format": "prettier --write .",
