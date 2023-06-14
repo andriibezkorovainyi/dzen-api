@@ -9,9 +9,8 @@ RUN npm clean-install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8080 7070
 
-EXPOSE 7070
 
 RUN npm run build
 
