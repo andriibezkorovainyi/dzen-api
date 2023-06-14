@@ -5,3 +5,4 @@ dist
 Dockerfile
 prisma
 public
+heroku.yml
