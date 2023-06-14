@@ -1,6 +1,6 @@
 import { Comment, File, PrismaClient } from '@prisma/client';
 import {
-  commentsSearchParams,
+  CommentsSearchParams,
   CreateCommentClientPayload,
 } from '../types/commentTypes';
 
@@ -21,7 +21,7 @@ class CommentService {
 
     return dbComment;
   }
-  async getComments(params: commentsSearchParams): Promise<Comment[]> {
+  async getComments(params: CommentsSearchParams): Promise<Comment[]> {
     const {
       page = 1,
       sortBy = 'createdAt',

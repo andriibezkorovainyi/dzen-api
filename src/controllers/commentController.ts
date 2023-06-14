@@ -1,15 +1,16 @@
 import commentService from '../services/commentService';
 import { WebSocket } from 'ws';
 import {
-  commentsSearchParams,
+  CommentsSearchParams,
   CreateCommentClientPayload,
 } from '../types/commentTypes';
-import fileService from '../services/fileService';
+// import fileService from '../services/fileService';
 import { validateCommentBody } from '../validators/validateCommentBody';
 import { validateCommentFile } from '../validators/validateCommentFile';
+import fileService from '../services/fileService';
 
 class CommentController {
-  async getComments(ws: WebSocket, params: commentsSearchParams) {
+  async getComments(ws: WebSocket, params: CommentsSearchParams) {
     try {
       const comments = await commentService.getComments(params);
       const message = {
@@ -62,7 +63,7 @@ class CommentController {
     }
   }
 
-  async getAnswers(params: commentsSearchParams, ws?: WebSocket) {
+  async getAnswers(params: CommentsSearchParams, ws?: WebSocket) {
     try {
       const comments = await commentService.getComments(params);
       const message = {

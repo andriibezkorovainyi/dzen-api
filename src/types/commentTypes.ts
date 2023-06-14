@@ -1,4 +1,4 @@
-export interface commentsSearchParams {
+export interface CommentsSearchParams {
   page?: number;
   sortBy?: 'createdAt' | 'userName' | 'email';
   orderBy?: 'asc' | 'desc';
@@ -18,13 +18,4 @@ export interface CreateCommentClientPayload {
 export interface CreateFileClientPayload {
   fileName: string;
   dataUrl: string;
-}
-
-export interface ServerResponseFilePayload {
-  id: number;
-  name: string;
-  type: string;
-  commentId: number;
-  size: number;
-  url: string;
 }
