@@ -46,10 +46,10 @@ async function main() {
 
   app.post('/create-user', userController.createUser);
 
-  app.listen(process.env.HTTP_PORT || 3001, () => {
+  app.listen(process.env.HTTP_PORT || 7070, () => {
     console.log(
       `HTTP server is listening at http://localhost:${
-        process.env.HTTP_PORT || 3001
+        process.env.HTTP_PORT || 7070
       }`
     );
   });
