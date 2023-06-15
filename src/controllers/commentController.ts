@@ -26,33 +26,27 @@ class CommentController {
   async createComment(commentData: CreateCommentClientPayload, ws: WebSocket) {
     const { file, body } = commentData;
 
-    let errors = {
-      ...validateCommentBody(body),
-    };
-
-    if (file) {
-      errors = {
-        ...errors,
+    try {
+      const errors = {
+        ...validateCommentBody(body),
         ...validateCommentFile(file),
       };
-    }
 
-    if (Object.keys(errors).length) {
-      const message = {
-        event: 'createCommentError',
-        data: {
-          errors,
-        },
-      };
+      if (Object.keys(errors).length) {
+        const message = {
+          event: 'createCommentError',
+          data: {
+            errors,
+          },
+        };
 
-      console.log('message: ', message);
+        console.log('message: ', message);
 
-      ws.send(JSON.stringify(message));
+        ws.send(JSON.stringify(message));
 
-      return;
-    }
+        return;
+      }
 
-    try {
       const createdComment = await commentService.createComment(commentData);
 
       const createdFile = file
