@@ -29,7 +29,7 @@ class CommentService {
       parentId = null,
     } = params;
 
-    const comments = await prisma.comment.findMany({
+    return prisma.comment.findMany({
       where: { parentId },
       skip: (page - 1) * 25,
       take: 25,
@@ -39,8 +39,6 @@ class CommentService {
         _count: { select: { children: true } },
       },
     });
-
-    return comments;
   }
 
   async createComment(data: CreateCommentClientPayload): Promise<Comment> {
@@ -54,12 +52,17 @@ class CommentService {
         avatarUrl,
         email,
       },
+      include: {
+        _count: {
+          select: { children: true },
+        },
+      },
     });
   }
 
   async getAnswers(parentId: number): Promise<Comment[]> {
-    return prisma.comment.findMany({
-      where: { parentId },
+    return this.getComments({
+      parentId,
     });
   }
 
