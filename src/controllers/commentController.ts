@@ -4,10 +4,9 @@ import {
   CommentsSearchParams,
   CreateCommentClientPayload,
 } from '../types/commentTypes';
-// import fileService from '../services/fileService';
 import { validateCommentBody } from '../validators/validateCommentBody';
-import { validateCommentFile } from '../validators/validateCommentFile';
 import fileService from '../services/fileService';
+import { validateCommentFile } from '../validators/validateCommentFile';
 
 class CommentController {
   async getComments(ws: WebSocket, params: CommentsSearchParams) {
@@ -27,10 +26,16 @@ class CommentController {
   async createComment(commentData: CreateCommentClientPayload, ws: WebSocket) {
     const { file, body } = commentData;
 
-    const errors = {
+    let errors = {
       ...validateCommentBody(body),
-      ...validateCommentFile(file),
     };
+
+    if (file) {
+      errors = {
+        ...errors,
+        ...validateCommentFile(file),
+      };
+    }
 
     if (Object.keys(errors).length) {
       const message = {

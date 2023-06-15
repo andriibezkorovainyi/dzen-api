@@ -1,4 +1,4 @@
-import { Comment, File, PrismaClient } from '@prisma/client';
+import { Comment, PrismaClient } from '@prisma/client';
 import {
   CommentsSearchParams,
   CreateCommentClientPayload,
@@ -29,18 +29,16 @@ class CommentService {
       parentId = null,
     } = params;
 
-    const comments = (await prisma.comment.findMany({
+    const comments = await prisma.comment.findMany({
       where: { parentId },
       skip: (page - 1) * 25,
       take: 25,
       orderBy: { [sortBy]: orderBy },
       include: {
-        user: true,
-        children: true,
         file: true,
+        _count: { select: { children: true } },
       },
-    })) as Comment[] &
-      { children: Comment[]; childrenCount: number; file: File | null }[];
+    });
 
     return comments;
   }

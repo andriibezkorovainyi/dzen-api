@@ -6,11 +6,7 @@ interface FileErrors {
   fileExtension?: string;
 }
 
-export function validateCommentFile(file: CreateFileClientPayload | undefined) {
-  if (!file) {
-    return {};
-  }
-
+export function validateCommentFile(file: CreateFileClientPayload) {
   const { fileName, dataUrl } = file;
   const errors: FileErrors = {};
   const mimeType = dataUrl.split(';')[0].split(':')[1];

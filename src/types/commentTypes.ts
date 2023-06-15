@@ -17,5 +17,7 @@ export interface CreateCommentClientPayload {
 
 export interface CreateFileClientPayload {
   fileName: string;
+  fileType: string;
+  fileSize: string;
   dataUrl: string;
 }

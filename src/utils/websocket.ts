@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import commentController from '../controllers/commentController';
 import broadcast from './broadcast';
 
-const WS_PORT = Number(process.env.PORT || 8080);
+const WS_PORT = Number(process.env.PORT);
 
 const webSocketServer = () => {
   const wss = new WebSocketServer({ port: WS_PORT }, () => {

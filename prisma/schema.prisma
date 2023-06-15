@@ -9,17 +9,17 @@ datasource db {
 
 model Comment {
   id            Int       @id @unique @default(autoincrement())
-  user          User      @relation(fields: [userId], references: [id])
   userName      String
   email         String
   userId        Int
   body          String
   parentId      Int?
+  createdAt     DateTime  @default(now())
   childrenCount Int?
   avatarUrl     String
   parent        Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
   children      Comment[] @relation("CommentToComment")
-  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id])
   file          File?
 }
 
@@ -27,21 +27,21 @@ model User {
   id          Int           @id @unique @default(autoincrement())
   email       String        @unique
   userName    String        @unique
+  createdAt   DateTime      @default(now())
   avatarUrl   String
   password    String
-  comments    Comment[]
   homePage    String?
+  comments    Comment[]
   UserSession UserSession[]
-  createdAt   DateTime      @default(now())
 }
 
 model UserSession {
   id        Int      @id @unique @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   ip        String
   userAgent String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model File {
@@ -49,8 +49,8 @@ model File {
   name      String
   type      String
   url       String
-  size      Int
   commentId Int      @unique
-  comment   Comment  @relation(fields: [commentId], references: [id])
   createdAt DateTime @default(now())
+  size      Int
+  comment   Comment  @relation(fields: [commentId], references: [id])
 }
