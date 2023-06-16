@@ -1,10 +1,5 @@
 import { CreateFileClientPayload } from '../types/commentTypes';
-
-interface FileErrors {
-  txtSize?: string;
-  fileType?: string;
-  fileExtension?: string;
-}
+import { FileErrors } from '../types/Errors';
 
 export function validateCommentFile(file: CreateFileClientPayload | undefined) {
   if (!file) return {};

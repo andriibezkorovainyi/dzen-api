@@ -7,20 +7,6 @@ import {
 const prisma = new PrismaClient();
 
 class CommentService {
-  async getCommentById(id: number): Promise<Comment | null> {
-    const dbComment = await prisma.comment.findUnique({
-      where: { id },
-      include: {
-        user: true,
-      },
-    });
-
-    if (!dbComment) {
-      return null;
-    }
-
-    return dbComment;
-  }
   async getComments(params: CommentsSearchParams): Promise<Comment[]> {
     const {
       page = 1,

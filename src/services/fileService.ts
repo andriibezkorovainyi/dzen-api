@@ -18,7 +18,6 @@ class FileService {
           Body: buffer,
         })
       );
-      console.log('Successfully created ');
     } catch (err) {
       console.log('Error', err);
     }

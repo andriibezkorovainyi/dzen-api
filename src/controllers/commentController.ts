@@ -40,8 +40,6 @@ class CommentController {
           },
         };
 
-        console.log('message: ', message);
-
         ws.send(JSON.stringify(message));
 
         return;
@@ -93,7 +91,6 @@ class CommentController {
       };
 
       ws.send(JSON.stringify(message));
-      console.log('getCommentsCount: ', message);
     } catch (err) {
       console.log(err);
     }

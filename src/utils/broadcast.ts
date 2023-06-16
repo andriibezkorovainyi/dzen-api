@@ -9,7 +9,6 @@ class Broadcast {
     ws: WebSocket
   ) {
     const newComment = await commentController.createComment(data, ws);
-    console.log('newComment: ', newComment);
     const parentId = newComment?.parentId;
 
     const message = {

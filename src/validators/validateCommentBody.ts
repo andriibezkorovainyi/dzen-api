@@ -1,9 +1,4 @@
-interface BodyErrors {
-  tooLong?: string;
-  empty?: string;
-  invalidTag?: string;
-  closeTag?: string;
-}
+import { BodyErrors } from '../types/Errors';
 
 export function validateCommentBody(commentText: string) {
   const errors: BodyErrors = {};

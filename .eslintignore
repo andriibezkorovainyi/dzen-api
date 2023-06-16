@@ -6,3 +6,4 @@ Dockerfile
 prisma
 public
 heroku.yml
+README.md
