@@ -11,4 +11,6 @@ COPY . .
 
 EXPOSE 9090
 
+RUN npm run build
+
 CMD npm run start
